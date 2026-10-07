@@ -355,6 +355,9 @@ public class FinanceApiFactory : WebApplicationFactory<Program>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Development");
+        // Program validates that a SQL Server connection string exists before the test host swaps
+        // the provider for EF Core InMemory. This placeholder is never used to open a connection.
+        builder.UseSetting("ConnectionStrings:FinanceDatabase", "Server=localhost;Database=LuminaMoneyTests;Trusted_Connection=True;TrustServerCertificate=True");
         builder.UseSetting("RateLimiting:AuthPermitLimit", "1000");
         builder.UseSetting("Subscriptions:Iaphub:WebhookToken", "test-webhook-token");
         builder.ConfigureServices(services =>
