@@ -13,7 +13,53 @@ jobs:
           dotnet-version: '10.0.x'
       - run: dotnet restore LuminaMoney.Tests/LuminaMoney.Tests.csproj
       - run: dotnet list LuminaMoney.Tests/LuminaMoney.Tests.csproj package --vulnerable --include-transitive
-      - run: dotnet test LuminaMoney.Tests/LuminaMoney.Tests.csproj --no-restore --configuration Release
+      - name: Run API and finance tests
+        run: dotnet test LuminaMoney.Tests/LuminaMoney.Tests.csproj --no-restore --configuration Release --logger "trx;LogFileName=test-results.trx"
+      - name: Publish test failure details
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          results = list(Path("LuminaMoney.Tests").glob("**/test-results.trx"))
+          summary = ["## API and finance test results", ""]
+          if not results:
+              summary.append("No TRX result file was produced. Check the test step for build or runner errors.")
+          else:
+              failed = []
+              total = 0
+              for path in results:
+                  root = ET.parse(path).getroot()
+                  counters = next((node for node in root.iter() if node.tag.endswith("}Counters") or node.tag == "Counters"), None)
+                  if counters is not None:
+                      total += int(counters.attrib.get("total", "0"))
+                  for test in root.iter():
+                      if (test.tag.endswith("}UnitTestResult") or test.tag == "UnitTestResult") and test.attrib.get("outcome") == "Failed":
+                          error = next((node for node in test.iter() if node.tag.endswith("}Message") or node.tag == "Message"), None)
+                          message = " ".join((error.text or "").split()) if error is not None else "No failure message was recorded."
+                          failed.append((test.attrib.get("testName", "Unknown test"), message))
+              summary.append(f"Total tests recorded: {total}")
+              if failed:
+                  summary.append(f"Failed tests: {len(failed)}")
+                  summary.append("")
+                  for name, message in failed:
+                      summary.extend([f"- `{name}`", f"  - {message}"])
+              else:
+                  summary.append("No failed test cases were recorded in the TRX results.")
+
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as output:
+              output.write("\n".join(summary) + "\n")
+          PY
+      - name: Archive test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-finance-test-results
+          path: LuminaMoney.Tests/**/test-results.trx
+          if-no-files-found: ignore
 
   compile-android:
     runs-on: windows-latest
