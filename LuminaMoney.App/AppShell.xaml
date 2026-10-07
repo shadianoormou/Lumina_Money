@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell x:Class="LuminaMoney.App.AppShell"
+ xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ xmlns:pages="clr-namespace:LuminaMoney.App.Pages"
+ Shell.NavBarIsVisible="False" FlyoutBehavior="Disabled"
+ Shell.BackgroundColor="#080C14" Shell.ForegroundColor="#EAF1FB" Shell.TitleColor="#EAF1FB"
+ Shell.TabBarBackgroundColor="#0E1623" Shell.TabBarForegroundColor="#9BC4FF" Shell.TabBarTitleColor="#9BC4FF" Shell.TabBarUnselectedColor="#8393AB">
+ <ShellContent Route="login" ContentTemplate="{DataTemplate pages:LoginPage}"/>
+ <TabBar Route="main" Shell.TabBarIsVisible="False">
+  <ShellContent Route="dashboard" Title="Home" Icon="nav_home.svg" ContentTemplate="{DataTemplate pages:MainPage}"/>
+  <ShellContent Route="budget" Title="Budget" Icon="nav_budget.svg" ContentTemplate="{DataTemplate pages:BudgetPage}"/>
+  <ShellContent Route="transactions" Title="Activity" Icon="nav_activity.svg" ContentTemplate="{DataTemplate pages:TransactionsPage}"/>
+  <ShellContent Route="plan" Title="Plan" Icon="nav_plan.svg" ContentTemplate="{DataTemplate pages:PlanPage}"/>
+  <ShellContent Route="accounts" Title="Accounts" Icon="nav_accounts.svg" ContentTemplate="{DataTemplate pages:AccountsPage}"/>
+ </TabBar>
+</Shell>

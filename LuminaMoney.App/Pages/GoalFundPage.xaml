@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage x:Class="LuminaMoney.App.Pages.GoalFundPage" Title="Fund goal"
+ xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ xmlns:vm="clr-namespace:LuminaMoney.App.ViewModels" x:DataType="vm:AppViewModel" Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False" Shell.BackgroundColor="#080C14" Shell.ForegroundColor="#EAF1FB" Shell.TitleColor="#EAF1FB">
+ <ScrollView><VerticalStackLayout x:Name="MotionRoot" Padding="20,14,20,32" Spacing="18">
+  <VerticalStackLayout><Label Text="CONTRIBUTION" Style="{StaticResource Eyebrow}"/><Label Text="Move the goal forward" Style="{StaticResource H1}"/><Label Text="Record a contribution without changing the target or deadline." Style="{StaticResource Body}"/></VerticalStackLayout>
+  <Border Style="{StaticResource HeroCard}"><VerticalStackLayout Spacing="7"><Label Text="FUNDING" Style="{StaticResource HeroEyebrow}"/><Label Text="{Binding FundingGoalName}" TextColor="White" FontSize="27" FontAttributes="Bold"/><Label Text="{Binding FundingProgressText}" TextColor="#C6DAFA" FontSize="13"/></VerticalStackLayout></Border>
+  <Border Style="{StaticResource SurfaceCard}"><VerticalStackLayout Spacing="15"><Label Text="CONTRIBUTION AMOUNT" Style="{StaticResource Eyebrow}"/><Border Style="{StaticResource InputCard}"><Grid ColumnDefinitions="Auto,*"><Label Text="£" FontSize="29" TextColor="{StaticResource DeepGreen}" FontAttributes="Bold" VerticalOptions="Center"/><Entry Grid.Column="1" Text="{Binding FundAmountText}" Placeholder="0.00" Keyboard="Numeric" FontSize="29"/></Grid></Border><Label Text="{Binding FormError}" TextColor="{StaticResource Danger}" FontSize="12"/><Button Text="Add contribution" Command="{Binding SaveGoalFundingCommand}" Style="{StaticResource GreenButton}"/></VerticalStackLayout></Border>
+ </VerticalStackLayout></ScrollView>
+</ContentPage>

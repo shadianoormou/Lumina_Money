@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="LuminaMoney.Api/LuminaMoney.Api.csproj" />
+  <Project Path="LuminaMoney.App/LuminaMoney.App.csproj" />
+  <Project Path="LuminaMoney.Core/LuminaMoney.Core.csproj" />
+  <Project Path="LuminaMoney.Tests/LuminaMoney.Tests.csproj" />
+</Solution>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+  <defs>
+    <linearGradient id="halo" x1="20" y1="18" x2="142" y2="145" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9FC4FF"/><stop offset="1" stop-color="#A8B9F3"/>
+    </linearGradient>
+    <linearGradient id="card" x1="43" y1="47" x2="122" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4FAF8"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="56" y1="99" x2="111" y2="99" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3F96FF"/><stop offset="1" stop-color="#697FF0"/>
+    </linearGradient>
+  </defs>
+  <circle cx="80" cy="80" r="69" fill="url(#halo)" opacity=".76"/>
+  <circle cx="80" cy="80" r="56" fill="#EAF2FF" opacity=".56"/>
+  <path d="M48 59c0-5 4-9 9-9h54c5 0 9 4 9 9v45c0 5-4 9-9 9H57c-5 0-9-4-9-9V59Z" fill="#D8E6F7" transform="translate(4 6)"/>
+  <rect x="44" y="47" width="72" height="66" rx="13" fill="url(#card)"/>
+  <rect x="55" y="59" width="29" height="5" rx="2.5" fill="#B7CBE8"/>
+  <rect x="55" y="70" width="50" height="3" rx="1.5" fill="#E0EAF8"/>
+  <rect x="55" y="79" width="38" height="3" rx="1.5" fill="#E0EAF8"/>
+  <path d="M57 99h51" stroke="#D8E6F7" stroke-width="2" stroke-linecap="round"/>
+  <rect x="57" y="91" width="10" height="8" rx="3" fill="#6CB3FF"/>
+  <rect x="73" y="86" width="10" height="13" rx="3" fill="#4B98F2"/>
+  <rect x="89" y="81" width="10" height="18" rx="3" fill="#7189EA"/>
+  <circle cx="112" cy="48" r="15" fill="#FFFFFF"/>
+  <circle cx="112" cy="48" r="11" fill="#E5EFFF"/>
+  <path d="M112 42v12M106 48h12" stroke="#397FD9" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="42" cy="111" r="5" fill="#78A9F2" opacity=".8"/>
+</svg>

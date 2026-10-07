@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage x:Class="LuminaMoney.App.Pages.GoalEditorPage" Title="Savings goal"
+ xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ xmlns:vm="clr-namespace:LuminaMoney.App.ViewModels" x:DataType="vm:AppViewModel" Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False" Shell.BackgroundColor="#080C14" Shell.ForegroundColor="#EAF1FB" Shell.TitleColor="#EAF1FB">
+ <ScrollView><VerticalStackLayout x:Name="MotionRoot" Padding="20,14,20,32" Spacing="18">
+  <VerticalStackLayout><Label Text="FUTURE YOU" Style="{StaticResource Eyebrow}"/><Label Text="Make a goal feel real" Style="{StaticResource H1}"/><Label Text="Define the finish line and Lumina calculates your monthly pace." Style="{StaticResource Body}"/></VerticalStackLayout>
+  <Border Style="{StaticResource HeroCard}"><Grid ColumnDefinitions="*,Auto" ColumnSpacing="15"><VerticalStackLayout Spacing="7"><Label Text="SMART SAVINGS" Style="{StaticResource HeroEyebrow}"/><Label Text="Progress you can see" TextColor="White" FontSize="24" FontAttributes="Bold"/><Label Text="Adjust the saved amount anytime to keep your plan honest." TextColor="#C6DAFA" FontSize="12"/></VerticalStackLayout><Label Grid.Column="1" Text="◇" TextColor="White" FontSize="48" VerticalOptions="Center"/></Grid></Border>
+  <Border Style="{StaticResource SurfaceCard}"><VerticalStackLayout Spacing="15">
+   <VerticalStackLayout Spacing="6"><Label Text="GOAL NAME" Style="{StaticResource Eyebrow}"/><Border Style="{StaticResource InputCard}"><Entry Text="{Binding GoalName}" Placeholder="e.g. Emergency fund"/></Border></VerticalStackLayout>
+   <Grid ColumnDefinitions="*,*" ColumnSpacing="10"><VerticalStackLayout Spacing="6"><Label Text="TARGET" Style="{StaticResource Eyebrow}"/><Border Style="{StaticResource InputCard}"><Entry Text="{Binding GoalTargetText}" Placeholder="£ 0" Keyboard="Numeric"/></Border></VerticalStackLayout><VerticalStackLayout Grid.Column="1" Spacing="6"><Label Text="SAVED" Style="{StaticResource Eyebrow}"/><Border Style="{StaticResource InputCard}"><Entry Text="{Binding GoalSavedText}" Placeholder="£ 0" Keyboard="Numeric"/></Border></VerticalStackLayout></Grid>
+   <VerticalStackLayout Spacing="6"><Label Text="TARGET DATE" Style="{StaticResource Eyebrow}"/><Border Style="{StaticResource InputCard}"><DatePicker Date="{Binding GoalDate}" Format="dd MMMM yyyy"/></Border></VerticalStackLayout>
+   <Label Text="{Binding FormError}" TextColor="{StaticResource Danger}" FontSize="12"/><Button Text="Save goal" Command="{Binding SaveGoalCommand}" Style="{StaticResource GreenButton}"/><Button Text="Delete goal" Command="{Binding DeleteGoalCommand}" IsVisible="{Binding IsEditingGoal}" Style="{StaticResource DangerButton}"/>
+  </VerticalStackLayout></Border>
+ </VerticalStackLayout></ScrollView>
+</ContentPage>

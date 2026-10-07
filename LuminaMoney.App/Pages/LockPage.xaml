@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage x:Class="LuminaMoney.App.Pages.LockPage"
+ xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ BackgroundColor="#14243A" Shell.NavBarIsVisible="False">
+ <Grid Padding="28" RowDefinitions="*,Auto,*">
+  <VerticalStackLayout Grid.Row="1" Spacing="22" HorizontalOptions="Fill">
+   <Border WidthRequest="82" HeightRequest="82" BackgroundColor="#3479E8" StrokeThickness="0" StrokeShape="RoundRectangle 28" HorizontalOptions="Center">
+    <Label Text="L" TextColor="White" FontSize="34" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+   </Border>
+   <VerticalStackLayout Spacing="7">
+    <Label Text="Lumina is locked" TextColor="#EAF1FB" FontSize="30" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+    <Label Text="Your financial data stays hidden until you verify your identity." TextColor="#A7B6CA" FontSize="14" LineHeight="1.35" HorizontalTextAlignment="Center"/>
+   </VerticalStackLayout>
+   <Border BackgroundColor="#101927" Stroke="#DCE7E8" StrokeThickness="1" Padding="18" StrokeShape="RoundRectangle 24">
+    <VerticalStackLayout Spacing="13">
+     <Label Text="Protected by your device" TextColor="#3479E8" FontSize="12" CharacterSpacing="1.1" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+     <Button Text="Unlock with biometrics" Clicked="OnUnlockClicked" Style="{StaticResource GreenButton}"/>
+     <Label x:Name="StatusLabel" Text="Face ID, Touch ID or fingerprint" TextColor="#A7B6CA" FontSize="12" HorizontalTextAlignment="Center"/>
+    </VerticalStackLayout>
+   </Border>
+  </VerticalStackLayout>
+ </Grid>
+</ContentPage>

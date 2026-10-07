@@ -1,0 +1,74 @@
+name: lumina-money
+services:
+  sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Standard"
+      MSSQL_SA_PASSWORD: "${SQL_SA_PASSWORD:?Set SQL_SA_PASSWORD}"
+    volumes:
+      - sql-data:/var/opt/mssql
+      - sql-backups:/var/opt/mssql/backup
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q \"SELECT 1\" -b -o /dev/null"]
+      interval: 15s
+      timeout: 8s
+      retries: 12
+      start_period: 30s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      sql:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      AllowedHosts: "${API_HOST:?Set API_HOST}"
+      ConnectionStrings__FinanceDatabase: "Server=sql;Database=LuminaMoney;User Id=sa;Password=${SQL_SA_PASSWORD};Encrypt=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
+      Database__ApplyMigrationsOnStartup: "true"
+      Jwt__Issuer: "LuminaMoney.Api"
+      Jwt__Audience: "LuminaMoney.Mobile"
+      Jwt__Key: "${JWT_KEY:?Set a random JWT_KEY of at least 32 bytes}"
+      Identity__RequireConfirmedEmail: "true"
+      Identity__AccountCodePepper: "${ACCOUNT_CODE_PEPPER:?Set a separate account-code pepper of at least 32 bytes}"
+      Email__FromAddress: "${EMAIL_FROM_ADDRESS:?Set EMAIL_FROM_ADDRESS}"
+      Email__FromName: "Lumina Money"
+      Email__Smtp__Host: "${SMTP_HOST:?Set SMTP_HOST}"
+      Email__Smtp__Port: "${SMTP_PORT:-587}"
+      Email__Smtp__Username: "${SMTP_USERNAME:-}"
+      Email__Smtp__Password: "${SMTP_PASSWORD:-}"
+      Email__Smtp__EnableSsl: "true"
+      Subscriptions__Iaphub__AppId: "${IAPHUB_APP_ID:?Set IAPHUB_APP_ID}"
+      Subscriptions__Iaphub__ServerApiKey: "${IAPHUB_SERVER_API_KEY:?Set IAPHUB_SERVER_API_KEY}"
+      Subscriptions__Iaphub__WebhookToken: "${IAPHUB_WEBHOOK_TOKEN:?Set IAPHUB_WEBHOOK_TOKEN}"
+      Subscriptions__Iaphub__Environment: "production"
+      Banking__TrueLayer__Enabled: "true"
+      Banking__TrueLayer__ClientId: "${TRUELAYER_CLIENT_ID:?Set TRUELAYER_CLIENT_ID}"
+      Banking__TrueLayer__ClientSecret: "${TRUELAYER_CLIENT_SECRET:?Set TRUELAYER_CLIENT_SECRET}"
+      Banking__TrueLayer__ReturnUri: "https://${API_HOST}/banking/truelayer/return"
+      Banking__TrueLayer__AuthBaseUrl: "https://auth.truelayer.com"
+      Banking__TrueLayer__ApiBaseUrl: "https://api.truelayer.com"
+      Legal__OperatorName: "${LEGAL_OPERATOR_NAME:?Set LEGAL_OPERATOR_NAME}"
+      Legal__OperatorCountry: "${LEGAL_OPERATOR_COUNTRY:?Set LEGAL_OPERATOR_COUNTRY}"
+      Legal__EffectiveDate: "${LEGAL_EFFECTIVE_DATE:?Set LEGAL_EFFECTIVE_DATE}"
+      Legal__MinimumAge: "${LEGAL_MINIMUM_AGE:-18}"
+      Legal__SupportEmail: "${SUPPORT_EMAIL:?Set SUPPORT_EMAIL}"
+      Legal__PrivacyContactEmail: "${PRIVACY_EMAIL:?Set PRIVACY_EMAIL}"
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks: [backend, edge]
+
+volumes:
+  sql-data:
+  sql-backups:
+
+networks:
+  backend:
+    internal: true
+  edge:

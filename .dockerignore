@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+.git/
+.vs/
+*.user
+*.suo
+*.png
+*.xml
+.env*
+!*.csproj

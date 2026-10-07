@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage x:Class="LuminaMoney.App.Pages.SettingsPage" Title="Profile &amp; security"
+ xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ xmlns:vm="clr-namespace:LuminaMoney.App.ViewModels" x:DataType="vm:SettingsViewModel" BackgroundColor="{StaticResource PageBackground}"
+ Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False" Shell.NavBarHasShadow="False">
+ <ScrollView><VerticalStackLayout x:Name="MotionRoot" Padding="20,14,20,44" Spacing="18">
+  <Grid ColumnDefinitions="*,Auto">
+   <VerticalStackLayout Spacing="3"><Label Text="YOUR LUMINA" Style="{StaticResource Eyebrow}"/><Label Text="Profile &amp; security" Style="{StaticResource H1}"/><Label Text="Control protection, integrations and your data." Style="{StaticResource Body}"/></VerticalStackLayout>
+   <ActivityIndicator Grid.Column="1" IsRunning="{Binding IsBusy}" Color="{StaticResource PrimaryGreen}" VerticalOptions="Center"/>
+  </Grid>
+
+  <Border Style="{StaticResource HeroCard}"><Grid ColumnDefinitions="58,*" ColumnSpacing="15"><Border WidthRequest="58" HeightRequest="58" BackgroundColor="#32FFFFFF" StrokeThickness="0" StrokeShape="RoundRectangle 19"><Label Text="{Binding Initials}" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/></Border><VerticalStackLayout Grid.Column="1" VerticalOptions="Center"><Label Text="{Binding DisplayName}" TextColor="White" FontSize="21" FontAttributes="Bold"/><Label Text="{Binding Email}" TextColor="#C6DAFA" FontSize="12"/></VerticalStackLayout></Grid></Border>
+
+  <Border IsVisible="{Binding HasActionStatus}" BackgroundColor="{StaticResource SoftGreen}" Stroke="#31517D" StrokeShape="RoundRectangle 16" Padding="14"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="10"><Label Text="✓" TextColor="{StaticResource DeepGreen}" FontAttributes="Bold"/><Label Grid.Column="1" Text="{Binding ActionStatus}" TextColor="{StaticResource DeepGreen}" FontSize="12"/></Grid></Border>
+
+  <Border Style="{StaticResource SurfaceCard}"><VerticalStackLayout Spacing="15">
+   <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border Style="{StaticResource IconTile}" BackgroundColor="{StaticResource SoftGreen}"><Label Text="↻" TextColor="{StaticResource DeepGreen}" FontSize="21" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/></Border><VerticalStackLayout Grid.Column="1" VerticalOptions="Center"><Label Text="CLOUD SYNC" Style="{StaticResource Eyebrow}"/><Label Text="{Binding SyncStatus}" Style="{StaticResource H3}"/></VerticalStackLayout></Grid>
+   <Button Text="Sync now" Command="{Binding SyncNowCommand}" IsEnabled="{Binding IsSignedIn}" Style="{StaticResource GreenButton}"/>
+  </VerticalStackLayout></Border>
+
+  <Border Style="{StaticResource SurfaceCard}"><VerticalStackLayout Spacing="14">
+   <Label Text="APP UPDATES" Style="{StaticResource Eyebrow}"/>
+   <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border Style="{StaticResource IconTile}" BackgroundColor="{StaticResource SoftBlue}"><Label Text="↓" TextColor="{StaticResource PrimaryBlue}" FontSize="23" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/></Border><VerticalStackLayout Grid.Column="1" VerticalOptions="Center"><Label Text="Google Play delivery" Style="{StaticResource H3}"/><Label Text="{Binding UpdateStatus}" Style="{StaticResource Muted}"/></VerticalStackLayout></Grid>
+   <Label Text="Lumina checks Google Play whenever the app starts or returns to the foreground. Available releases appear here and open Google's secure in-app update flow." Style="{StaticResource Body}"/>
+   <Grid ColumnDefinitions="*,*" ColumnSpacing="10"><Button Text="Check for updates" Command="{Binding CheckForUpdateCommand}" Style="{StaticResource SecondaryButton}"/><Button Grid.Column="1" Text="{Binding UpdateAction}" Command="{Binding ApplyUpdateCommand}" IsVisible="{Binding ShowUpdateAction}" Style="{StaticResource GreenButton}"/></Grid>
+  </VerticalStackLayout></Border>
+
+  <Border Style="{StaticResource SurfaceCard}"><VerticalStackLayout Spacing="15">
+   <Label Text="APP PROTECTION" Style="{StaticResource Eyebrow}"/>
+   <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border Style="{StaticResource IconTile}" BackgroundColor="{StaticResource SoftBlue}"><Label Text="⌾" TextColor="{StaticResource PrimaryBlue}" FontSize="23" HorizontalOptions="Center" VerticalOptions="Center"/></Border><VerticalStackLayout Grid.Column="1" VerticalOptions="Center"><Label Text="Biometric app lock" Style="{StaticResource H3}"/><Label Text="{Binding BiometricStatus}" Style="{StaticResource Muted}"/></VerticalStackLayout></Grid>
+   <Button Text="{Binding BiometricAction}" Command="{Binding ToggleBiometricCommand}" Style="{StaticResource SecondaryButton}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
+   <BoxView HeightRequest="1" BackgroundColor="{StaticResource Line}"/>
+   <Grid ColumnDefinitions="*,Auto"><VerticalStackLayout><Label Text="Reduce motion" Style="{StaticResource H3}"/><Label Text="Use instant transitions instead of staggered animation." Style="{StaticResource Muted}"/></VerticalStackLayout><Switch Grid.Column="1" IsToggled="{Binding IsReducedMotion}" OnColor="{StaticResource PrimaryGreen}" VerticalOptions="Center" SemanticProperties.Description="Reduce page motion"/></Grid>
+  </VerticalStackLayout></Border>
+
+  <Border Style="{StaticResource SurfaceCard}"><VerticalStackLayout Spacing="14">
+   <Label Text="BILL REMINDERS" Style="{StaticResource Eyebrow}"/>
+   <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border Style="{StaticResource IconTile}" BackgroundColor="#162B48"><Label Text="◷" TextColor="#A9C9FF" FontSize="23" HorizontalOptions="Center" VerticalOptions="Center"/></Border><VerticalStackLayout Grid.Column="1" VerticalOptions="Center"><Label Text="Never miss a commitment" Style="{StaticResource H3}"/><Label Text="{Binding ReminderStatus}" Style="{StaticResource Muted}"/></VerticalStackLayout></Grid>
+   <Border Style="{StaticResource InputCard}"><Picker Title="Reminder timing" ItemsSource="{Binding ReminderLeadOptions}" SelectedItem="{Binding SelectedReminderLead}" ItemDisplayBinding="{Binding Label}"/></Border>
+   <Border IsVisible="{Binding ShowNotificationSettings}" BackgroundColor="#14243A" Stroke="#31517D" StrokeShape="RoundRectangle 14" Padding="13"><VerticalStackLayout Spacing="8"><Label Text="Android notifications are blocked" TextColor="#A9C9FF" FontAttributes="Bold" FontSize="12"/><Label Text="The operating system will not deliver reminders until you allow Lumina Money notifications." TextColor="#A9C9FF" FontSize="11"/><Button Text="Open notification settings" Command="{Binding OpenNotificationSettingsCommand}" Style="{StaticResource SecondaryButton}"/></VerticalStackLayout></Border>
+   <Grid ColumnDefinitions="*,*" ColumnSpacing="10"><Button Text="Save timing" Command="{Binding SaveReminderTimingCommand}" Style="{StaticResource SecondaryButton}"/><Button Grid.Column="1" Text="{Binding ReminderAction}" Command="{Binding ToggleRemindersCommand}" Style="{StaticResource GreenButton}"/></Grid>
+  </VerticalStackLayout></Border>
+
+  <Border Style="{StaticResource SurfaceCard}"><VerticalStackLayout Spacing="14">
+   <Label Text="LUMINA MEMBERSHIP" Style="{StaticResource Eyebrow}"/>
+   <Grid ColumnDefinitions="*,Auto"><VerticalStackLayout><Label Text="{Binding PlanName}" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource DeepBlue}"/><Label Text="{Binding PlanStatus}" Style="{StaticResource Muted}"/></VerticalStackLayout><Border Grid.Column="1" Style="{StaticResource Pill}" VerticalOptions="Center"><Label Text="VERIFIED SERVER-SIDE" TextColor="{StaticResource DeepBlue}" FontSize="9" FontAttributes="Bold"/></Border></Grid>
+   <Label Text="Store purchases are trusted only after server verification. Client-side tokens never unlock premium access by themselves." Style="{StaticResource Body}"/>
+   <Button Text="View plans &amp; manage membership" Command="{Binding OpenMembershipCommand}" Style="{StaticResource GreenButton}" IsEnabled="{Binding IsSignedIn}"/>
+   <Button Text="Refresh entitlement" Command="{Binding RefreshCommercialStatusCommand}" Style="{StaticResource SecondaryButton}" IsEnabled="{Binding IsSignedIn}"/>
+  </VerticalStackLayout></Border>
+
+  <Border Style="{StaticResource SurfaceCard}"><VerticalStackLayout Spacing="14">
+   <Label Text="OPEN BANKING" Style="{StaticResource Eyebrow}"/>
+   <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border Style="{StaticResource IconTile}" BackgroundColor="{StaticResource SoftGreen}"><Label Text="£" TextColor="{StaticResource DeepGreen}" FontSize="21" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/></Border><VerticalStackLayout Grid.Column="1" VerticalOptions="Center"><Label Text="TrueLayer bank connection" Style="{StaticResource H3}"/><Label Text="{Binding BankStatus}" Style="{StaticResource Muted}"/></VerticalStackLayout></Grid>
+   <Label Text="Uses TrueLayer's hosted consent journey. Lumina never asks for or stores your online-banking password." Style="{StaticResource Body}"/>
+   <Button Text="Connect a UK bank" Command="{Binding ConnectBankCommand}" Style="{StaticResource GreenButton}" IsEnabled="{Binding CanConnectBank}"/>
+   <Button Text="Disconnect linked banks" Command="{Binding DisconnectBanksCommand}" Style="{StaticResource DangerButton}" IsVisible="{Binding HasBankConnections}"/>
+   <Label Text="Disconnecting stops future Lumina refreshes and keeps imported history. You can also revoke consent from your bank's own security settings." Style="{StaticResource Muted}" IsVisible="{Binding HasBankConnections}"/>
+  </VerticalStackLayout></Border>
+
+  <Border Style="{StaticResource SurfaceCard}"><VerticalStackLayout Spacing="15">
+   <Label Text="PRIVACY &amp; PORTABILITY" Style="{StaticResource Eyebrow}"/>
+   <Label Text="Each profile has an isolated local vault. Sensitive text and queued payloads use AES-256-GCM with a key held by Keychain or Keystore." Style="{StaticResource Body}"/>
+   <Button Text="Export all cloud data (JSON)" Command="{Binding ExportCloudDataCommand}" Style="{StaticResource SecondaryButton}" IsEnabled="{Binding IsSignedIn}"/>
+   <Grid ColumnDefinitions="*,*" ColumnSpacing="10"><Button Text="Privacy policy" Command="{Binding OpenPrivacyCommand}" Style="{StaticResource TextButton}"/><Button Grid.Column="1" Text="Terms of service" Command="{Binding OpenTermsCommand}" Style="{StaticResource TextButton}"/></Grid>
+   <Button Text="Help &amp; support" Command="{Binding OpenSupportCommand}" Style="{StaticResource TextButton}"/>
+   <Button Text="Sign out" Command="{Binding SignOutCommand}" Style="{StaticResource SecondaryButton}"/>
+   <Button Text="Erase local copy only" Command="{Binding EraseLocalCopyCommand}" Style="{StaticResource DangerButton}"/>
+  </VerticalStackLayout></Border>
+
+  <Border BackgroundColor="#321A25" Stroke="#684051" StrokeThickness="1" StrokeShape="RoundRectangle 22" Padding="18"><VerticalStackLayout Spacing="12">
+   <Label Text="DELETE CLOUD ACCOUNT" TextColor="{StaticResource Danger}" FontSize="10" CharacterSpacing="1.4" FontAttributes="Bold"/>
+   <Label Text="Permanently removes your identity, finance records, refresh sessions, subscription record and bank-connection metadata from SQL Server." Style="{StaticResource Body}"/>
+   <Button Text="How account deletion works" Command="{Binding OpenDeletionHelpCommand}" Style="{StaticResource TextButton}"/>
+   <Border Style="{StaticResource InputCard}"><Entry Placeholder="Current password" Text="{Binding DeletePassword}" IsPassword="True" IsTextPredictionEnabled="False"/></Border>
+   <Border Style="{StaticResource InputCard}"><Entry Placeholder="Type DELETE" Text="{Binding DeleteConfirmation}" MaxLength="6" IsTextPredictionEnabled="False"/></Border>
+   <Button Text="Permanently delete account" Command="{Binding DeleteCloudAccountCommand}" Style="{StaticResource DangerButton}" IsEnabled="{Binding IsSignedIn}"/>
+  </VerticalStackLayout></Border>
+ </VerticalStackLayout></ScrollView>
+</ContentPage>

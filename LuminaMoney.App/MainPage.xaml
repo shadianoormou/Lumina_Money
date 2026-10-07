@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="LuminaMoney.App.Pages.MainPage"
+             x:Name="DashboardPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LuminaMoney.App.ViewModels"
+             xmlns:controls="clr-namespace:LuminaMoney.App.Controls"
+             x:DataType="vm:AppViewModel"
+             Background="{StaticResource DashboardBackground}"
+             Shell.TabBarIsVisible="False">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <LinearGradientBrush x:Key="DashboardBackground" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#080C14" Offset="0" />
+                <GradientStop Color="#0B1220" Offset="0.56" />
+                <GradientStop Color="#101A2A" Offset="1" />
+            </LinearGradientBrush>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="*,Auto" Shell.TabBarIsVisible="False">
+        <RefreshView Grid.Row="0" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
+            <ScrollView>
+                <VerticalStackLayout x:Name="MotionRoot" Padding="22,12,22,22" Spacing="19">
+                    <!-- A quiet, personal header; the balance—not a marketing banner—is the focus. -->
+                    <Grid x:Name="Header" ColumnDefinitions="*,Auto" ColumnSpacing="14" VerticalOptions="Center">
+                        <VerticalStackLayout Spacing="3" VerticalOptions="Center">
+                            <Label Text="{Binding Greeting}" FontSize="13" TextColor="#91A0B6" />
+                            <Label Text="Overview" FontFamily="OpenSansSemibold" FontSize="24" CharacterSpacing="-0.45" TextColor="#EFF4FC" />
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1" WidthRequest="44" HeightRequest="44" BackgroundColor="#142033" Stroke="#2B3C56" StrokeThickness="1" StrokeShape="RoundRectangle 22" SemanticProperties.Description="Open profile and security settings" controls:PremiumMotion.IsEnabled="True">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSettingsCommand}" /></Border.GestureRecognizers>
+                            <Label Text="{Binding UserInitials}" TextColor="#83B3FF" FontAttributes="Bold" FontSize="13" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                    </Grid>
+
+                    <Border IsVisible="{Binding HasStatusMessage}" BackgroundColor="#142943" Stroke="#31517D" StrokeThickness="1" StrokeShape="RoundRectangle 14" Padding="13,10">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="9">
+                            <Label Text="✓" TextColor="#8BC0FF" FontAttributes="Bold" />
+                            <Label Grid.Column="1" Text="{Binding StatusMessage}" TextColor="#BDD8FF" FontSize="12" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Balance-led welcome state: show a real calculated balance, never sample figures. -->
+                    <Border x:Name="GettingStartedCard" IsVisible="{Binding IsFreshStart}" Stroke="#2B4567" StrokeThickness="1" StrokeShape="RoundRectangle 24" Padding="20">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#101A29" Offset="0" />
+                                <GradientStop Color="#12243B" Offset="0.62" />
+                                <GradientStop Color="#142D4B" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="13">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                                    <Label Text="TOTAL NET WORTH" FontSize="9" CharacterSpacing="1.4" FontAttributes="Bold" TextColor="#9FC4FF" />
+                                    <Label Text="Your financial picture" FontFamily="OpenSansSemibold" FontSize="14" TextColor="#C8D7EC" />
+                                </VerticalStackLayout>
+                                <Border Grid.Column="1" BackgroundColor="#1B3353" Stroke="#315880" StrokeThickness="1" StrokeShape="RoundRectangle 50" Padding="10,6" VerticalOptions="Center"><HorizontalStackLayout Spacing="6"><Label Text="◆" TextColor="#9FC4FF" FontSize="8" VerticalOptions="Center"/><Label Text="PRIVATE" TextColor="#C8D7EC" FontSize="8" CharacterSpacing=".8" FontAttributes="Bold"/></HorizontalStackLayout></Border>
+                            </Grid>
+                            <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                                <VerticalStackLayout Spacing="3" VerticalOptions="Center"><controls:AnimatedAmountLabel AmountText="{Binding NetWorth}" FontFamily="OpenSansSemibold" FontSize="39" FontAttributes="Bold" CharacterSpacing="-0.8" TextColor="#F4F7FC"/><Label Text="Across your active accounts" FontSize="11" TextColor="#A7B6CA"/></VerticalStackLayout>
+                                <Grid Grid.Column="1" x:Name="SnapshotArt" WidthRequest="78" HeightRequest="78" VerticalOptions="Center">
+                                    <Border BackgroundColor="#193653" Stroke="#315880" StrokeThickness="1" StrokeShape="RoundRectangle 39" />
+                                    <Image Source="finance_overview.svg" WidthRequest="76" HeightRequest="76" HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Grid>
+                            </Grid>
+                            <BoxView Grid.Row="2" HeightRequest="1" Color="#37506E" Opacity=".8" />
+                            <Label Grid.Row="3" Text="Add an account to bring your balances, spending and plans into one clear view." FontSize="12" LineHeight="1.25" TextColor="#C0CEE2" />
+                            <Button Grid.Row="4" Text="Add your first account  →" Command="{Binding AddAccountCommand}" TextColor="White" FontSize="13" FontAttributes="Bold" CornerRadius="15" HeightRequest="50" HorizontalOptions="Fill" Padding="16,0">
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#2F70E8" Offset="0" />
+                                        <GradientStop Color="#428BFF" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <VerticalStackLayout x:Name="FirstSteps" IsVisible="{Binding IsFreshStart}" Spacing="11">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="GETTING STARTED" FontSize="9" CharacterSpacing="1.3" FontAttributes="Bold" TextColor="#8298B8" />
+                                <Label Text="Set up your money" FontFamily="OpenSansSemibold" FontSize="17" TextColor="#EAF1FB" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Text="START HERE" FontSize="9" CharacterSpacing=".7" FontAttributes="Bold" TextColor="#8399B8" VerticalOptions="Center" />
+                        </Grid>
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                            <Border BackgroundColor="#111B2B" Stroke="#263A57" StrokeThickness="1" StrokeShape="RoundRectangle 16" Padding="10,10" HeightRequest="84" controls:PremiumMotion.IsEnabled="True">
+                                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding AddAccountCommand}" /></Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="7" VerticalOptions="Center">
+                                    <Border WidthRequest="30" HeightRequest="30" BackgroundColor="#162B48" StrokeThickness="0" StrokeShape="RoundRectangle 10"><Image Source="nav_accounts.svg" WidthRequest="16" HeightRequest="16" HorizontalOptions="Center" VerticalOptions="Center" /></Border>
+                                    <Label Text="Accounts" FontFamily="OpenSansSemibold" FontSize="10" TextColor="#E0EAF8" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="1" BackgroundColor="#111B2B" Stroke="#263A57" StrokeThickness="1" StrokeShape="RoundRectangle 16" Padding="10,10" HeightRequest="84" controls:PremiumMotion.IsEnabled="True">
+                                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding AddTransactionCommand}" /></Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="7" VerticalOptions="Center">
+                                    <Border WidthRequest="30" HeightRequest="30" BackgroundColor="#162B48" StrokeThickness="0" StrokeShape="RoundRectangle 10"><Image Source="action_add.svg" WidthRequest="16" HeightRequest="16" HorizontalOptions="Center" VerticalOptions="Center" /></Border>
+                                    <Label Text="Activity" FontFamily="OpenSansSemibold" FontSize="10" TextColor="#E0EAF8" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="2" BackgroundColor="#111B2B" Stroke="#263A57" StrokeThickness="1" StrokeShape="RoundRectangle 16" Padding="10,10" HeightRequest="84" controls:PremiumMotion.IsEnabled="True">
+                                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenBudgetCommand}" /></Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="7" VerticalOptions="Center">
+                                    <Border WidthRequest="30" HeightRequest="30" BackgroundColor="#182944" StrokeThickness="0" StrokeShape="RoundRectangle 10"><Image Source="nav_budget.svg" WidthRequest="16" HeightRequest="16" HorizontalOptions="Center" VerticalOptions="Center" /></Border>
+                                    <Label Text="Plan" FontFamily="OpenSansSemibold" FontSize="10" TextColor="#E0EAF8" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <Border x:Name="FreshCashFlowCard" IsVisible="{Binding IsFreshStart}" Stroke="#2B4668" StrokeThickness="1" StrokeShape="RoundRectangle 22" Padding="16,14" controls:PremiumMotion.IsEnabled="True">
+                        <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#111B2B"/><GradientStop Color="#14253D" Offset="1"/></LinearGradientBrush></Border.Background>
+                        <VerticalStackLayout Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Spacing="2"><Label Text="Cash flow" FontFamily="OpenSansSemibold" FontSize="17" FontAttributes="Bold" TextColor="#EAF1FB"/><Label Text="Your six-month money-in vs money-out trend" FontSize="10" TextColor="#8B9BB2"/></VerticalStackLayout>
+                                <Border Grid.Column="1" BackgroundColor="#162B48" StrokeThickness="0" StrokeShape="RoundRectangle 50" Padding="9,5" VerticalOptions="Center"><Label Text="NO ACTIVITY" TextColor="#A9C9FF" FontSize="8" CharacterSpacing=".6" FontAttributes="Bold"/></Border>
+                            </Grid>
+                            <controls:CashFlowChart Values="{Binding CashFlowSeries}" HeightRequest="118"/>
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="6 months ago" FontSize="9" TextColor="#8293AC"/><Label Grid.Column="1" Text="This month" FontSize="9" TextColor="#8293AC"/></Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <VerticalStackLayout x:Name="FreshMonth" IsVisible="{Binding IsFreshStart}" Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="This month" FontFamily="OpenSansSemibold" FontSize="17" TextColor="#E9F0FA" />
+                            <Label Grid.Column="1" Text="{Binding CurrentMonth}" FontSize="11" TextColor="#8496B0" VerticalOptions="Center" />
+                        </Grid>
+                        <Border BackgroundColor="#101927" Stroke="#27374F" StrokeThickness="1" StrokeShape="RoundRectangle 17" Padding="15,14">
+                            <Grid ColumnDefinitions="*,Auto,*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                                    <Label Text="INCOME" FontSize="9" CharacterSpacing="1.1" FontAttributes="Bold" TextColor="#8B9BB2" />
+                                    <Label Text="No activity yet" FontFamily="OpenSansSemibold" FontSize="12" TextColor="#DCE7F7" />
+                                </VerticalStackLayout>
+                                <BoxView Grid.Column="1" WidthRequest="1" HeightRequest="38" Color="#27374F" VerticalOptions="Center" />
+                                <VerticalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center">
+                                    <Label Text="SPENDING" FontSize="9" CharacterSpacing="1.1" FontAttributes="Bold" TextColor="#8B9BB2" />
+                                    <Label Text="No activity yet" FontFamily="OpenSansSemibold" FontSize="12" TextColor="#DCE7F7" />
+                                </VerticalStackLayout>
+                                <Border Grid.Column="3" WidthRequest="34" HeightRequest="34" BackgroundColor="#163153" Stroke="#2D517D" StrokeThickness="1" StrokeShape="RoundRectangle 12" VerticalOptions="Center" controls:PremiumMotion.IsEnabled="True">
+                                    <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding AddTransactionCommand}" /></Border.GestureRecognizers>
+                                    <Image Source="action_add.svg" WidthRequest="16" HeightRequest="16" HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Real-account dashboard: one balance surface, simple metrics, then useful detail. -->
+                    <VerticalStackLayout x:Name="Overview" IsVisible="{Binding IsFreshStart, Converter={StaticResource InverseBoolConverter}}" Spacing="22">
+                        <Border x:Name="Hero" Stroke="#315179" StrokeThickness="1" StrokeShape="RoundRectangle 20" Padding="19,18,19,15">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#121D2E" Offset="0" />
+                                    <GradientStop Color="#142843" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <VerticalStackLayout Spacing="13">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout Spacing="4"><Label Text="TOTAL NET WORTH" FontSize="10" CharacterSpacing="1.5" FontAttributes="Bold" TextColor="#A0AEC2" /><Label Text="Across your accounts" FontSize="11" TextColor="#8293AC" /></VerticalStackLayout>
+                                    <Button Grid.Column="1" Text="Accounts  ↗" Command="{Binding OpenAccountsCommand}" BackgroundColor="#1B3353" TextColor="#88B7FF" FontSize="11" FontAttributes="Bold" CornerRadius="10" HeightRequest="34" Padding="11,0" VerticalOptions="Start" />
+                                </Grid>
+                                <controls:AnimatedAmountLabel AmountText="{Binding NetWorth}" FontFamily="OpenSansSemibold" FontSize="37" FontAttributes="Bold" CharacterSpacing="-0.65" TextColor="#F2F6FD" />
+                                <BoxView HeightRequest="1" Color="#2A3B54" />
+                                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="13">
+                                    <VerticalStackLayout Spacing="4"><Label Text="SAFE TO SPEND" FontSize="9" CharacterSpacing="1.0" FontAttributes="Bold" TextColor="#A0AEC2" /><controls:AnimatedAmountLabel AmountText="{Binding SafeToSpend}" FontFamily="OpenSansSemibold" FontSize="16" TextColor="#8BC0FF" /></VerticalStackLayout>
+                                    <BoxView Grid.Column="1" WidthRequest="1" HeightRequest="33" Color="#2A3B54" VerticalOptions="Center" />
+                                    <VerticalStackLayout Grid.Column="2" Spacing="4"><Label Text="MONTHLY FLOW" FontSize="9" CharacterSpacing="1.0" FontAttributes="Bold" TextColor="#A0AEC2" HorizontalTextAlignment="End" /><controls:AnimatedAmountLabel AmountText="{Binding CashFlow}" FontFamily="OpenSansSemibold" FontSize="16" TextColor="#83B4FF" HorizontalTextAlignment="End" /></VerticalStackLayout>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <VerticalStackLayout x:Name="MonthlySummary" Spacing="11">
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="This month" FontFamily="OpenSansSemibold" FontSize="19" FontAttributes="Bold" TextColor="#EAF1FB" /><Label Grid.Column="1" Text="{Binding CurrentMonth}" FontSize="11" TextColor="#8496B0" VerticalOptions="Center" /></Grid>
+                            <Border BackgroundColor="#101927" Stroke="#27374F" StrokeThickness="1" StrokeShape="RoundRectangle 17" Padding="16,15">
+                                <Grid ColumnDefinitions="*,Auto,*,Auto" ColumnSpacing="13">
+                                    <VerticalStackLayout Spacing="6"><Label Text="INCOME" FontSize="9" CharacterSpacing="1.2" FontAttributes="Bold" TextColor="#8B9BB2" /><controls:AnimatedAmountLabel AmountText="{Binding MonthlyIncome}" FontFamily="OpenSansSemibold" FontSize="20" TextColor="#8BC0FF" /><Label Text="Money in" FontSize="10" TextColor="#8293AC" /></VerticalStackLayout>
+                                    <BoxView Grid.Column="1" WidthRequest="1" HeightRequest="44" Color="#27374F" VerticalOptions="Center" />
+                                    <VerticalStackLayout Grid.Column="2" Spacing="6"><Label Text="SPENDING" FontSize="9" CharacterSpacing="1.2" FontAttributes="Bold" TextColor="#8B9BB2" /><controls:AnimatedAmountLabel AmountText="{Binding MonthlySpent}" FontFamily="OpenSansSemibold" FontSize="20" TextColor="#83B4FF" /><Label Text="Money out" FontSize="10" TextColor="#8293AC" /></VerticalStackLayout>
+                                    <Label Grid.Column="3" Text="↗" TextColor="#8EA2BF" FontSize="15" VerticalOptions="Center" />
+                                    <Grid.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenReportsCommand}" /></Grid.GestureRecognizers>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout x:Name="CashFlowTrend" Spacing="4">
+                            <Grid ColumnDefinitions="*,Auto"><VerticalStackLayout Spacing="2"><Label Text="Cash flow" FontFamily="OpenSansSemibold" FontSize="19" FontAttributes="Bold" TextColor="#EAF1FB"/><Label Text="Income minus spending" FontSize="11" TextColor="#8B9BB2"/></VerticalStackLayout><Label Grid.Column="1" Text="LAST 6 MONTHS" FontSize="9" CharacterSpacing=".9" FontAttributes="Bold" TextColor="#8B9BB2" VerticalOptions="Center"/></Grid>
+                            <controls:CashFlowChart Values="{Binding CashFlowSeries}" HeightRequest="112" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout x:Name="QuickActions" Spacing="10">
+                            <Label Text="Shortcuts" FontFamily="OpenSansSemibold" FontSize="19" FontAttributes="Bold" TextColor="#EAF1FB" />
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="9">
+                                <Border BackgroundColor="#15283C" StrokeThickness="0" StrokeShape="RoundRectangle 13" Padding="11,12" HeightRequest="66" controls:PremiumMotion.IsEnabled="True"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding AddTransactionCommand}" /></Border.GestureRecognizers><HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center"><Image Source="action_add.svg" WidthRequest="17" HeightRequest="17"/><Label Text="Activity" FontSize="11" FontAttributes="Bold" TextColor="#84B5FF" VerticalOptions="Center"/></HorizontalStackLayout></Border>
+                                <Border Grid.Column="1" BackgroundColor="#162B48" StrokeThickness="0" StrokeShape="RoundRectangle 13" Padding="11,12" HeightRequest="66" controls:PremiumMotion.IsEnabled="True"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenBudgetMoveCommand}" /></Border.GestureRecognizers><HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center"><Image Source="action_move.svg" WidthRequest="17" HeightRequest="17"/><Label Text="Move" FontSize="11" FontAttributes="Bold" TextColor="#91B9FA" VerticalOptions="Center"/></HorizontalStackLayout></Border>
+                                <Border Grid.Column="2" BackgroundColor="#172538" StrokeThickness="0" StrokeShape="RoundRectangle 13" Padding="11,12" HeightRequest="66" controls:PremiumMotion.IsEnabled="True"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenReportsCommand}" /></Border.GestureRecognizers><HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center"><Image Source="action_insights.svg" WidthRequest="17" HeightRequest="17"/><Label Text="Insights" FontSize="11" FontAttributes="Bold" TextColor="#9AAAC0" VerticalOptions="Center"/></HorizontalStackLayout></Border>
+                            </Grid>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout x:Name="BudgetPreview" Spacing="10">
+                            <Grid ColumnDefinitions="*,Auto"><VerticalStackLayout Spacing="3"><Label Text="Spending plan" FontFamily="OpenSansSemibold" FontSize="19" TextColor="#EAF1FB" /><Label Text="{Binding BudgetStatus}" FontSize="11" TextColor="#8B9BB2" /></VerticalStackLayout><Button Grid.Column="1" Text="See plan  →" Command="{Binding OpenBudgetCommand}" BackgroundColor="Transparent" TextColor="#80B3FF" FontSize="11" FontAttributes="Bold" Padding="7,0" /></Grid>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Categories}" Spacing="0">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:CategoryItem">
+                                        <Grid ColumnDefinitions="34,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="11" Padding="0,11">
+                                            <Border Grid.RowSpan="3" WidthRequest="32" HeightRequest="32" StrokeThickness="0" StrokeShape="RoundRectangle 11" BackgroundColor="#1B293A" VerticalOptions="Start"><Label Text="{Binding Icon}" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center" /></Border>
+                                            <Label Grid.Column="1" Text="{Binding Name}" FontSize="13" FontAttributes="Bold" TextColor="#DCE7F7" VerticalOptions="Center" />
+                                            <Label Grid.Column="2" Text="{Binding Remaining}" FontSize="12" FontAttributes="Bold" TextColor="{Binding StateColor}" HorizontalTextAlignment="End" VerticalOptions="Center" />
+                                            <ProgressBar Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Progress="{Binding Progress}" ProgressColor="#5D9CFF" BackgroundColor="#24344B" HeightRequest="4" Margin="0,7,0,2" />
+                                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding Assigned}" FontSize="10" TextColor="#899BB5" />
+                                            <BoxView Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" HeightRequest="1" Color="#25364D" VerticalOptions="End" Margin="0,12,0,0" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout x:Name="RecentActivity" Spacing="10">
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="Recent activity" FontFamily="OpenSansSemibold" FontSize="19" TextColor="#EAF1FB" /><Button Grid.Column="1" Text="View all  →" Command="{Binding OpenTransactionsCommand}" BackgroundColor="Transparent" TextColor="#80B3FF" FontSize="11" FontAttributes="Bold" Padding="7,0" /></Grid>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentTransactions}" Spacing="0">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:TransactionItem">
+                                        <Grid ColumnDefinitions="36,*,Auto" ColumnSpacing="11" Padding="0,11">
+                                            <Border WidthRequest="34" HeightRequest="34" BackgroundColor="#162233" StrokeThickness="0" StrokeShape="RoundRectangle 12"><Label Text="↗" TextColor="{Binding Color}" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" /></Border>
+                                            <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center"><Label Text="{Binding Payee}" FontSize="13" FontAttributes="Bold" TextColor="#DCE7F7" /><Label Text="{Binding Category}" FontSize="10" TextColor="#8395AF" /></VerticalStackLayout>
+                                            <VerticalStackLayout Grid.Column="2" Spacing="3" VerticalOptions="Center"><Label Text="{Binding AmountText}" TextColor="{Binding Color}" FontSize="12" FontAttributes="Bold" HorizontalTextAlignment="End" /><Label Text="{Binding DateText}" FontSize="10" TextColor="#8395AF" HorizontalTextAlignment="End" /></VerticalStackLayout>
+                                            <Grid.GestureRecognizers><TapGestureRecognizer Command="{Binding Source={x:Reference DashboardPage},Path=BindingContext.EditTransactionCommand}" CommandParameter="{Binding .}" /></Grid.GestureRecognizers>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+        <controls:PremiumTabBar Grid.Row="1" ActiveTab="Home" />
+    </Grid>
+</ContentPage>

@@ -1,0 +1,29 @@
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+*.suo
+*.pfx
+*.keystore
+*.jks
+*.mobileprovision
+*.cer
+*.key
+artifacts/
+publish/
+.env
+.env.*
+!.env.production.example
+appsettings.*.local.json
+
+# Machine-specific API configuration may contain workstation names or credentials.
+LuminaMoney.Api/appsettings.json
+LuminaMoney.Api/appsettings.Development.json
+LuminaMoney.Api/appsettings.Production.json
+
+# Local emulator captures, UI hierarchy dumps and install packages are not source assets.
+/lumina-*
+/recovery*
+/current-login.xml
+/LuminaMoney-android-debug.apk
