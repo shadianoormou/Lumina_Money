@@ -358,6 +358,11 @@ public class FinanceApiFactory : WebApplicationFactory<Program>
         // Program validates that a SQL Server connection string exists before the test host swaps
         // the provider for EF Core InMemory. This placeholder is never used to open a connection.
         builder.UseSetting("ConnectionStrings:FinanceDatabase", "Server=localhost;Database=LuminaMoneyTests;Trusted_Connection=True;TrustServerCertificate=True");
+        // These deterministic credentials are only for the isolated in-memory test host.
+        builder.UseSetting("Jwt:Key", "CI-ONLY-NOT-A-SECRET-LUMINA-MONEY-TEST-SIGNING-KEY-0123456789");
+        builder.UseSetting("Jwt:Issuer", "LuminaMoney.Tests");
+        builder.UseSetting("Jwt:Audience", "LuminaMoney.Tests");
+        builder.UseSetting("Identity:AccountCodePepper", "CI-ONLY-TEST-ACCOUNT-CODE-PEPPER-DO-NOT-USE-IN-PRODUCTION");
         builder.UseSetting("RateLimiting:AuthPermitLimit", "1000");
         builder.UseSetting("Subscriptions:Iaphub:WebhookToken", "test-webhook-token");
         builder.ConfigureServices(services =>
