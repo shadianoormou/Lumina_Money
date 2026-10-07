@@ -365,6 +365,7 @@ public class FinanceApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Identity:AccountCodePepper", "CI-ONLY-TEST-ACCOUNT-CODE-PEPPER-DO-NOT-USE-IN-PRODUCTION");
         builder.UseSetting("RateLimiting:AuthPermitLimit", "1000");
         builder.UseSetting("Subscriptions:Iaphub:WebhookToken", "test-webhook-token");
+        builder.UseSetting("Subscriptions:AllowedProducts:0", "lumina_plus_monthly");
         builder.ConfigureServices(services =>
         {
             services.RemoveAll<DbContextOptions<FinanceDbContext>>();
